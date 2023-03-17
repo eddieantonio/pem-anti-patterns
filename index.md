@@ -12,13 +12,52 @@ pre,pre>code{white-space: pre-wrap !important}
 
  - [Abstract](https://dl.acm.org/doi/10.1145/3545947.3576243)
  - [Supplemental video](https://dl.acm.org/doi/10.1145/3545947.3576243#sec-supp)
+ - Anti-patterns:
+   - [Cascading Error](#cascading-error)
+   - [Compiler-speak](#compiler-speak)
+   - [Charged Vocabulary](#charged-vocabulary)
+   - [Implicit Suggestion](#implicit-suggestion)
+   - [One-sided conflict](#one-sided-conflict)
+   - [Token Soup](#token-soup)
 
- - [Compiler-speak](#compiler-speak)
- - [Charged Vocabulary](#charged-vocabulary)
- - [Implicit Suggestion](#implicit-suggestion)
- - [Token Soup](#token-soup)
+# Catalog of Anti-patterns
 
-# Calogue of Anti-patterns
+## Cascading error
+
+A cascading error (sometimes known as a _spurious error_) is when an
+additional, superfluous error message is produced by an attempt to
+recover from a previous error message. That is, cascading error messages
+are _false positives_. They do not correspond to a true programming
+mistake.
+
+A cascading error will no longer be reported if the previous error is
+addressed or fixed.
+
+### Example of a Cascading Error in Java 17.0.1
+
+The following code that makes a single mistake (missing `,` between `x`
+and `y`)...
+
+```java
+class C {
+    int x y;
+}
+```
+
+...will produce the following two errors:
+
+```
+C.java:2: error: ';' expected
+    int x y;
+         ^
+C.java:2: error: <identifier> expected
+    int x y;
+           ^
+2 errors
+```
+
+`<identifier> expected` is a cascading error and should be ignored.
+
 
 ## Compiler-speak
 
@@ -119,6 +158,36 @@ Should I insert a variable where the underline is?
 <span style="color:white;background-color:black;"> </span> <span style="filter: contrast(70%) brightness(190%);color:red;">            ~</span>
 </pre>
 
+## One-sided Conflict
+
+A One-sided Conflict occurs when there is an inconsistency in the code,
+however, the programming error message only indicates where the
+inconsistency was _discovered_, rather than showing all sides of the
+conflict.
+
+### Example of a One-sided Conflict in JavaScript (SpiderMonkey)
+
+Consider the following code:
+
+```
+var greting = "hello world";
+console.log(greeting);
+```
+
+This code will induce the following error message:
+
+```
+VM782:1 Uncaught ReferenceError: greeting is not defined
+```
+
+The programmer intended to use a variable called `greeting`, but
+misspelled the name in the variable _declaration_. The programmer used
+the correct spelling when they _used_ the variable, however, this is the
+point when the JavaScript engine detected the error.
+The JavaScript engine only reports the correctly spelled usage of the
+variable, where it could show the declaration of similarly-spelled
+variables in scope. Since it only shows the usage, this is a One-sided
+conflict.
 
 ## Token Soup
 
