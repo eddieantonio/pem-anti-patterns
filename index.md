@@ -12,6 +12,7 @@ pre,pre>code{white-space: pre-wrap !important}
 
  - [Abstract](https://dl.acm.org/doi/10.1145/3545947.3576243)
  - [Supplemental video](https://dl.acm.org/doi/10.1145/3545947.3576243#sec-supp)
+ - [Poster](./antipatterns-sigcse-poster.pdf)
  - Anti-patterns:
    - [Cascading Error](#cascading-error)
    - [Compiler-speak](#compiler-speak)
